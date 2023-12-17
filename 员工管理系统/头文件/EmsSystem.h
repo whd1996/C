@@ -1,5 +1,9 @@
 #ifndef EMSSYSTEN_H
 #define EMSSYSTEN_H
+#include "Employee.h"
+#include "LoginStatus.h"
+#include "Department.h"
+#include "Util.h"
 //函数声明
 //系统函数
 void initSystem(void);      // 系统初始化（从文件读取相关数据信息到内存）

@@ -1,8 +1,5 @@
 #include "EmsSystem.h"
-#include "Employee.h"
-#include "LoginStatus.h"
-#include "Department.h"
-#include "Util.h"
+
 // 系统初始化
 void initSystem(void)
 {
@@ -37,9 +34,9 @@ void exitSystem()
 	EmployeeList* emp = Emp;
 	DepartmentList* dep = Dep;
 	// 以只写方式打开文件employee.txt，文件存在则把内容清空。
-	FILE* efwp = fopen("employee.txt", "w");
+	FILE* efwp = fopen("../员工管理系统/资源文件/employee.txt", "w");
 	// 以只写方式打开文件department.txt，文件存在则把内容清空。
-	FILE* dfwp = fopen("department.txt", "w");
+	FILE* dfwp = fopen("../员工管理系统/资源文件/department.txt", "w");
 	if (online == 1)//总经理在线时 可排序保存所有数据
 	{
 		color(3);

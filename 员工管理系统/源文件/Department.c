@@ -4,8 +4,9 @@
 DepartmentList* createDepartmentList()
 {
 	int dCount = 0;   //链表中元素个数 即员工总数
-	DepartmentList* head;
-	DepartmentList* p1, * p2;
+	DepartmentList* head=NULL;
+	DepartmentList* p;
+	Department newDp;
 	int num = 0;
 	FILE* dfrp = fopen("../员工管理系统/资源文件/department.txt", "r");
 	if (NULL == dfrp)
@@ -13,23 +14,22 @@ DepartmentList* createDepartmentList()
 		printf("部门信息文件 打开失败!\n");
 		exit(0);
 	}
-	p1 = p2 = (DepartmentList*)malloc(sizeof(struct DNode));
 	//人事部 貂蝉 3 2300
-	num = fscanf(dfrp, "%s %s %d %lf\n", p1->department.dname, p1->department.mname,
-		&p1->department.dnum, &p1->department.sumsalary);
-	head = NULL;
-	while (1)
+	while (fscanf(dfrp, "%s %s %d %lf\n", newDp.dname, newDp.mname,&newDp.dnum, &newDp.sumsalary)!=EOF)
 	{
-		dCount++;
-		if (dCount == 1) head = p1;
-		else p2->next = p1;
-		p2 = p1;
-		p1 = (DepartmentList*)malloc(sizeof(struct DNode));
-		if (feof(dfrp) != 0)break;//文件读取结束 跳出循环
-		num = fscanf(dfrp, "%s %s %d %lf\n", p1->department.dname, p1->department.mname,
-			&p1->department.dnum, &p1->department.sumsalary);
+		p = (DepartmentList*)malloc(sizeof(struct DNode));
+		p->department = newDp;
+		p->next = NULL;
+		if (head == NULL)
+			head = p;
+		else 
+		{
+			DepartmentList* tail = head;
+			while (tail->next != NULL)
+				tail = tail->next;
+			tail->next = p;
+		}
 	}
-	p2->next = NULL;
 	return head;
 }
 // 2.查询业务

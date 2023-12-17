@@ -6,8 +6,9 @@
 EmployeeList* createEmployeeList()
 {
 	int eCount = 0;   //链表中元素个数 即员工总数
-	EmployeeList* head;
-	EmployeeList* p1, * p2;
+	EmployeeList* head = NULL;
+	EmployeeList* p;
+	Employee newEmp;
 	int num = 0;
 	FILE* ffrp = fopen("../员工管理系统/资源文件/employee.txt", "r");
 	if (NULL == ffrp)
@@ -15,26 +16,25 @@ EmployeeList* createEmployeeList()
 		printf("员工信息文件 打开失败!\n");
 		exit(0);
 	}
-	p1 = p2 = (EmployeeList*)malloc(sizeof(struct ENode));
-	//202101 123 张三 陕西西安 1008611 101.00 人事部 300 HR
-	num = fscanf(ffrp, "%d %s %s %s %s %lf %s %d %s\n",
-		&p1->employee.pid, p1->employee.password, p1->employee.name, p1->employee.address, p1->employee.phonenum,
-		&p1->employee.salary, p1->employee.department, &p1->employee.authority, p1->employee.position);
-	head = NULL;
-	while (1)
-	{
-		eCount++;
-		if (eCount == 1) head = p1;
-		else p2->next = p1;
 
-		p2 = p1;
-		p1 = (EmployeeList*)malloc(sizeof(struct ENode));
-		if (feof(ffrp) != 0)break;//文件读取结束 跳出循环
-		num = fscanf(ffrp, "%d %s %s %s %s %lf %s %d %s\n",
-			&p1->employee.pid, p1->employee.password, p1->employee.name, p1->employee.address, p1->employee.phonenum,
-			&p1->employee.salary, p1->employee.department, &p1->employee.authority, p1->employee.position);
+	//202101 123 张三 陕西西安 1008611 101.00 人事部 300 HR
+	while (fscanf(ffrp, "%d %s %s %s %s %lf %s %d %s\n",
+		&newEmp.pid, newEmp.password, newEmp.name, newEmp.address, newEmp.phonenum,
+		&newEmp.salary, newEmp.department, &newEmp.authority, newEmp.position) != EOF)
+	{
+		p = (EmployeeList*)malloc(sizeof(struct ENode));
+		p->employee = newEmp;
+		p->next = NULL;
+		if (head == NULL)
+			head = p;
+		else
+		{
+			EmployeeList* tail = head;
+			while (tail->next != NULL)
+				tail = tail->next;
+			tail->next = p;
+		}
 	}
-	p2->next = NULL;
 	return head;
 }
 //查询所有员工信息 不包含密码
@@ -846,46 +846,38 @@ void deleteEmployeeByPid(int pid)
 {
 	char department[10];
 	double salary = 0;
-	EmployeeList* p = Emp;  //员工链表的头指针
+	EmployeeList* p = (EmployeeList*)malloc(sizeof(struct ENode));
+	p->next = Emp;  //定义一个虚拟头结点指针
 	EmployeeList* q = p;
 	DepartmentList* d = Dep;
 	int flag = 0;
 	if (online == 1)
 	{
-		while (p != NULL)
+		while (p->next != NULL)
 		{
-			if (p->next != NULL)
-				if (pid == p->next->employee.pid)
+			if (pid == p->next->employee.pid)
+			{
+				//如果是被删除者是经理,则需要先卸任->委任经理,后才可删除
+				if (p->next->employee.authority == 200)
 				{
-					//如果是被删除者是经理,则需要先卸任->委任经理,后才可删除
-					if (p->next->employee.authority == 200)
+					color(4);
+					printf("被删除者是%s%s,请先卸任->委任经理!\n", p->next->employee.position, p->next->employee.name);
+					printf("1.是\n0.否\n");
+					switch (get_cmd('0', '1'))
 					{
-						color(4);
-						printf("被删除者是%s%s,请先卸任->委任经理!\n", p->next->employee.position, p->next->employee.name);
-						printf("1.是\n0.否\n");
-						switch (get_cmd('0', '1'))
-						{
-						case '1': updateEmployeeByName(p->next->employee.name);//卸任其职位
-							break;
-						case '0': return;
-						}
+					case '1': updateEmployeeByName(p->next->employee.name);//卸任其职位
+						break;
+					case '0': return;
 					}
-					strcpy(department, p->next->employee.department);//department记录编号员工所在部门 
-					salary = p->next->employee.salary;//salary记录编号员工原来的工资
-					if (p->next->next == NULL)//如果是最后一个节点  删除方法有所改变
-					{
-						q = p->next;
-						p->next = NULL;
-						free(q);
-						flag = 1;break;//删除成功
-					}
-					//如果是中间的某个结点
-					q = p->next;
-					p->next = q->next;
-					free(q);
-					flag = 1;break;//删除成功
-					break;
 				}
+				strcpy(department, p->next->employee.department);//department记录编号员工所在部门 
+				salary = p->next->employee.salary;//salary记录编号员工原来的工资
+				q = p->next;
+				p->next = NULL;
+				free(q);
+				flag = 1;
+				break;//删除成功
+			}
 			p = p->next;
 		}
 		while (d != NULL)
@@ -969,46 +961,39 @@ void deleteEmployeeByName(char* name)
 {
 	char department[10];
 	double salary = 0;
-	EmployeeList* p = Emp;  //员工链表的头指针
+	EmployeeList* p = (EmployeeList*)malloc(sizeof(struct ENode));
+	p->next = Emp;  //定义一个虚拟头结点指针
 	EmployeeList* q = p;
 	DepartmentList* d = Dep;
 	int flag = 0;
 	if (online == 1)
 	{
-		while (p != NULL)
+		while (p->next != NULL)
 		{
-			if (p->next != NULL)
-				if (strcmp(name, p->next->employee.name) == 0)//找到姓名一致的员工
+
+			if (strcmp(name, p->next->employee.name) == 0)//找到姓名一致的员工
+			{
+				//如果是被删除者是经理,则需要先卸任->委任经理,后才可删除
+				if (p->next->employee.authority == 200)
 				{
-					//如果是被删除者是经理,则需要先卸任->委任经理,后才可删除
-					if (p->next->employee.authority == 200)
+					color(4);
+					printf("被删除者是%s%s,请先卸任->委任经理!\n", p->next->employee.position, p->next->employee.name);
+					printf("1.是\n0.否\n");
+					switch (get_cmd('0', '1'))
 					{
-						color(4);
-						printf("被删除者是%s%s,请先卸任->委任经理!\n", p->next->employee.position, p->next->employee.name);
-						printf("1.是\n0.否\n");
-						switch (get_cmd('0', '1'))
-						{
-						case '1': updateEmployeeByName(p->next->employee.name);//卸任其职位
-						case '0': return;
-						}
-						return;
+					case '1': updateEmployeeByName(p->next->employee.name);//卸任其职位
+					case '0': return;
 					}
-					strcpy(department, p->next->employee.department);//department记录编号员工所在部门 
-					salary = p->next->employee.salary;//salary记录编号员工原来的工资
-					if (p->next->next == NULL)//如果是最后一个节点  删除方法有所改变
-					{
-						q = p->next;
-						p->next = NULL;
-						free(q);
-						flag = 1;break;//删除成功
-					}
-					//如果是中间的某个结点
-					q = p->next;
-					p->next = q->next;
-					free(q);
-					flag = 1;break;//删除成功
-					break;
+					return;
 				}
+				strcpy(department, p->next->employee.department);//department记录编号员工所在部门 
+				salary = p->next->employee.salary;//salary记录编号员工原来的工资
+				q = p->next;
+				p->next = q->next;
+				free(q);
+				flag = 1;
+				break;//删除成功
+			}
 			p = p->next;
 		}
 		if (flag == 0)
