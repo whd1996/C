@@ -15,8 +15,45 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.c">
+    <Text Include="资源文件\department.txt">
+      <Filter>资源文件</Filter>
+    </Text>
+    <Text Include="资源文件\employee.txt">
+      <Filter>资源文件</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="源文件\main.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="源文件\Employee.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="源文件\Department.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="源文件\Util.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="源文件\EmsSystem.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="头文件\Department.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="头文件\Employee.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="头文件\Util.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="头文件\LoginStatus.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="头文件\EmsSystem.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

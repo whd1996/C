@@ -88,6 +88,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Users\l\source\repos\员工管理系统\员工管理系统\资源文件;C:\Users\l\source\repos\员工管理系统\员工管理系统\头文件;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -139,7 +140,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="main.c" />
+    <Text Include="资源文件\department.txt" />
+    <Text Include="资源文件\employee.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="源文件\Department.c" />
+    <ClCompile Include="源文件\Employee.c" />
+    <ClCompile Include="源文件\EmsSystem.c" />
+    <ClCompile Include="源文件\main.c" />
+    <ClCompile Include="源文件\Util.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="头文件\Department.h" />
+    <ClInclude Include="头文件\Employee.h" />
+    <ClInclude Include="头文件\EmsSystem.h" />
+    <ClInclude Include="头文件\LoginStatus.h" />
+    <ClInclude Include="头文件\Util.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
